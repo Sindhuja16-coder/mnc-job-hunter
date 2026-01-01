@@ -2,9 +2,8 @@ name: Daily Job Hunter
 
 on:
   schedule:
-    # Runs at 04:30 UTC every day (which is 10:00 AM IST)
     - cron: '30 4 * * *'
-  workflow_dispatch: # Allows you to run it manually to test
+  workflow_dispatch:
 
 jobs:
   run-job-hunter:
@@ -20,8 +19,7 @@ jobs:
           python-version: '3.9'
 
       - name: Install Libraries
-        run: |
-          pip install google-search-results
+        run: pip install google-search-results
 
       - name: Run Job Script
         env:
