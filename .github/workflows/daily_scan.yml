@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Libraries
         run: |
-          pip install -r requirements.txt
+          pip install google-search-results
 
       - name: Run Job Script
         env:
