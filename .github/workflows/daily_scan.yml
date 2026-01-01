@@ -21,9 +21,7 @@ jobs:
       - name: Install Libraries
         run: pip install google-search-results
 
-# Step 1: The Debug Step
-      - name: Debug - List all files
-        run: ls -R
+
 
       # Step 2: The Actual Job Script
       - name: Run Job Script
