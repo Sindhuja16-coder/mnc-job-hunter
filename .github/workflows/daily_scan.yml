@@ -1,9 +1,8 @@
 name: Daily Job Hunter
-
 on:
+  workflow_dispatch:      # Keep this so you can still test it manually
   schedule:
-    - cron: '30 4 * * *'
-  workflow_dispatch:
+    - cron: '30 3 * * *'  # 3:30 AM UTC = 9:00 AM IST
 
 jobs:
   run-job-hunter:
