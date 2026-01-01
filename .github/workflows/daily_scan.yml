@@ -1,0 +1,32 @@
+name: Daily Job Hunter
+
+on:
+  schedule:
+    # Runs at 04:30 UTC every day (which is 10:00 AM IST)
+    - cron: '30 4 * * *'
+  workflow_dispatch: # Allows you to run it manually to test
+
+jobs:
+  run-job-hunter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Libraries
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Job Script
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+        run: python main.py
