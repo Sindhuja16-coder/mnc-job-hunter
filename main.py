@@ -38,7 +38,7 @@ def search_jobs():
     params = {
         "api_key": SERPAPI_KEY, 
         "engine": "google_jobs",
-        "q": "Intune Administrator Hyderabad", # Very simple query to test
+        "q": "End user support Hyderabad, Endpoint Engineer, Intune administraor", # Very simple query to test
         "google_domain": "google.co.in",
         "gl": "in",
         "hl": "en"
@@ -58,11 +58,25 @@ def filter_and_format(jobs):
     count = 0
     
     for job in jobs:
+       
+       # 1. Get the Data
         title = job.get("title", "Unknown Role")
         company = job.get("company_name", "Unknown Company")
         location = job.get("location", "India")
-        
-        # Get the Apply Link
+
+        # --- EXPERIENCED FILTER ---
+        # Convert title to lowercase for easy checking
+        job_title_lower = title.lower()
+
+        # A. SKIP if it's a Senior/Manager role
+        if "senior" in job_title_lower or "manager" in job_title_lower or "lead" in job_title_lower or "architect" in job_title_lower:
+            continue  # Skip this job
+
+        # B. SKIP if it requires many years (e.g. "10+ years")
+       # Block 5+, 7+, 8+, and 10+ years
+if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
+    continue
+        # ---------------------------
         link = job.get("share_link")
         if job.get("related_links"):
             link = job.get("related_links")[0].get("link")
@@ -128,4 +142,5 @@ if __name__ == "__main__":
             count, content = filter_and_format(jobs)
             send_email(count, content)
         else:
+
             print("No jobs found via API.")
