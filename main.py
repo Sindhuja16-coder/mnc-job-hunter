@@ -77,19 +77,18 @@ def filter_and_format(jobs):
 if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
     continue
         # ---------------------------
-        link = job.get("share_link")
-        if job.get("related_links"):
-            link = job.get("related_links")[0].get("link")
+link = job.get("share_link")
+if job.get("related_links"):
+link = job.get("related_links")[0].get("link")
+# Check if it matches your target MNC list
+is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
 
-        # Check if it matches your target MNC list
-        is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
-        
-        if is_mnc:
-            style = "color: green; font-weight: bold; font-size: 1.1em;"
-            prefix = "🌟 [MNC MATCH] "
-        else:
-            style = "color: #333;"
-            prefix = ""
+if is_mnc:
+    style = "color: green; font-weight: bold; font-size: 1.1em;"
+    prefix = "🌟 [MNC MATCH] "
+else:
+    style = "color: #333;"
+    prefix = ""
 
         email_content += f"""
         <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
@@ -144,3 +143,4 @@ if __name__ == "__main__":
         else:
 
             print("No jobs found via API.")
+
