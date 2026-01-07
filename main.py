@@ -93,6 +93,8 @@ def filter_and_format(job, count, email_content):
     </div>
     """
     return count + 1, email_content
+
+def send_email(count, content):
     if count == 0:
         print("⚠️ No new jobs found today. No email sent.")
         return
@@ -117,9 +119,9 @@ def filter_and_format(job, count, email_content):
         server.login(EMAIL_USER, EMAIL_PASS)
         server.sendmail(EMAIL_USER, EMAIL_RECEIVER, msg.as_string())
         server.quit()
-        print(f"Email Sent Successfully to {EMAIL_RECEIVER}!")
+        print(f"✅ Email Sent Successfully to {EMAIL_RECEIVER}!")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"❌ Error sending email: {e}")
 
 if __name__ == "__main__":
     if "PASTE_YOUR" in SERPAPI_KEY or "PASTE_YOUR" in EMAIL_PASS:
@@ -133,6 +135,7 @@ if __name__ == "__main__":
                 count, email_content = filter_and_format(job, count, email_content)
             
             send_email(count, email_content)
+
 
 
 
