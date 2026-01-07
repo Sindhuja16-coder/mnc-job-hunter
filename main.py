@@ -76,13 +76,12 @@ def filter_and_format(jobs):
        # Block 5+, 7+, 8+, and 10+ years
 # B. SKIP if it requires many years
     if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
-        continue
+    continue
 
     link = job.get("share_link")
     if job.get("related_links"):
         link = job.get("related_links")[0].get("link")
-        link = job.get("related_links")[0].get("link")
-
+       
     # Check if it matches your target MNC list
     is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
 
@@ -146,6 +145,7 @@ if __name__ == "__main__":
         else:
 
             print("No jobs found via API.")
+
 
 
 
