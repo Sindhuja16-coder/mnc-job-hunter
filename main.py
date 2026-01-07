@@ -53,45 +53,36 @@ def search_jobs():
         print(f"❌ API Error: {e}")
         return []
 
-def filter_and_format(jobs):
-    email_content = ""
-    count = 0
-    
-    for job in jobs:
-       
-       # 1. Get the Data
-        title = job.get("title", "Unknown Role")
-        company = job.get("company_name", "Unknown Company")
-        location = job.get("location", "India")
+def filter_and_format(job, count, email_content):
+    # Get job details and convert title to lowercase
+    title = job.get("title", "")
+    company = job.get("company", "")
+    location = job.get("location", "")
+    job_title_lower = title.lower()
 
-        # --- EXPERIENCED FILTER ---
-        # Convert title to lowercase for easy checking
-        job_title_lower = title.lower()
+    # A. SKIP if it's a Senior/Manager/Lead role
+    if any(word in job_title_lower for word in ["senior", "manager", "lead", "architect"]):
+        return count, email_content
 
-        # A. SKIP if it's a Senior/Manager role
-        if "senior" in job_title_lower or "manager" in job_title_lower or "lead" in job_title_lower or "architect" in job_title_lower:
-            continue  # Skip this job
+    # B. SKIP if it requires 5+, 8+, or 10+ years
+    if any(years in job_title_lower for years in ["10+ years", "8+ years", "5+ years"]):
+        return count, email_content
 
-        # B. SKIP if it requires many years (e.g. "10+ years")
-       # Block 5+, 7+, 8+, and 10+ years
-# B. SKIP if it requires many years
-    if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
-        continue
-
+    # Determine the best link to use
     link = job.get("share_link")
     if job.get("related_links"):
         link = job.get("related_links")[0].get("link")
-       
+
     # Check if it matches your target MNC list
     is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
 
+    # Set styles based on MNC status
     if is_mnc:
-        style = "color: green; font-weight: bold; font-size: 1.1em;"
-        prefix = "★ [MNC MATCH] "
+        style, prefix = "color: green; font-weight: bold; font-size: 1.1em;", "★ [MNC MATCH] "
     else:
-        style = "color: #333;"
-        prefix = ""
+        style, prefix = "color: #333;", ""
 
+    # Build the HTML content for this job
     email_content += f"""
     <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
         <div style="{style}">{prefix}{title}</div>
@@ -101,11 +92,7 @@ def filter_and_format(jobs):
         </div>
     </div>
     """
-    count += 1
-        
-    return count, email_content
-
-def send_email(count, content):
+    return count + 1, email_content
     if count == 0:
         print("⚠️ No new jobs found today. No email sent.")
         return
@@ -140,11 +127,13 @@ if __name__ == "__main__":
     else:
         jobs = search_jobs()
         if jobs:
-            count, content = filter_and_format(jobs)
-            send_email(count, content)
-        else:
+            count = 0
+            email_content = ""
+            for job in jobs:
+                count, email_content = filter_and_format(job, count, email_content)
+            
+            send_email(count, email_content)
 
-            print("No jobs found via API.")
 
 
 
