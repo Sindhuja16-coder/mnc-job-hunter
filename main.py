@@ -74,32 +74,34 @@ def filter_and_format(jobs):
 
         # B. SKIP if it requires many years (e.g. "10+ years")
        # Block 5+, 7+, 8+, and 10+ years
-if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
-    continue
-        # ---------------------------
-link = job.get("share_link")
-if job.get("related_links"):
-    link = job.get("related_links")[0].get("link")
-# Check if it matches your target MNC list
-is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
+# B. SKIP if it requires many years
+    if "10+ years" in job_title_lower or "8+ years" in job_title_lower or "5+ years" in job_title_lower:
+        continue
 
-if is_mnc:
-    style = "color: green; font-weight: bold; font-size: 1.1em;"
-    prefix = "🌟 [MNC MATCH] "
-else:
-    style = "color: #333;"
-    prefix = ""
+    link = job.get("share_link")
+    if job.get("related_links"):
+        link = job.get("related_links")[0].get("link")
 
-        email_content += f"""
-        <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
-            <div style="{style}">{prefix}{title}</div>
-            <div style="color: #555;">🏢 <b>{company}</b> | 📍 {location}</div>
-            <div style="margin-top: 5px;">
-                <a href="{link}" style="background-color: #007bff; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px;">Apply Now</a>
-            </div>
+    # Check if it matches your target MNC list
+    is_mnc = any(mnc.lower() in company.lower() for mnc in TARGET_MNCS)
+
+    if is_mnc:
+        style = "color: green; font-weight: bold; font-size: 1.1em;"
+        prefix = "★ [MNC MATCH] "
+    else:
+        style = "color: #333;"
+        prefix = ""
+
+    email_content += f"""
+    <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
+        <div style="{style}">{prefix}{title}</div>
+        <div style="color: #555;">🏢 <b>{company}</b> | 📍 {location}</div>
+        <div style="margin-top: 5px;">
+            <a href="{link}" style="background-color: #007bff; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px;">View Job</a>
         </div>
-        """
-        count += 1
+    </div>
+    """
+    count += 1
         
     return count, email_content
 
@@ -143,5 +145,6 @@ if __name__ == "__main__":
         else:
 
             print("No jobs found via API.")
+
 
 
